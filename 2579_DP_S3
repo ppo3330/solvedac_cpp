@@ -1,0 +1,28 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int* dp= new int[10001];
+	int* lst = new int[10001];
+
+	int n;
+	cin >> n;
+	for (int i = 1; i < n+1; i++) {
+		cin >> lst[i];
+	}
+
+	lst[0] = 0;
+	dp[0] = 0;
+	dp[1] = lst[1];
+	dp[2] = lst[2]+lst[1];
+
+	for (int i = 3; i < n + 1; i++) {
+		dp[i] = max(dp[i-3] + lst[i-1]+lst[i], dp[i - 2] + lst[i]);
+	}
+	cout << dp[n];
+}
