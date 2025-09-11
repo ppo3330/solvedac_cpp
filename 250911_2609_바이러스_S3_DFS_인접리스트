@@ -1,0 +1,45 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+
+using namespace std;
+
+vector<vector<int>> com;
+vector<int> visit;
+int n, link;
+int result = 0;
+
+void dfs(int a) {
+	for (int i = 0; i < com[a].size(); i++) {
+		int next = com[a][i];
+		if (visit[next] == 0) {
+			visit[next]++;
+			result++;
+			dfs(next);
+		}
+	}
+}//n
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> n >> link;
+
+	com.resize(n);
+	visit.resize(n, 0);
+
+	for (int i = 0; i < link; i++)	{
+		int a, b;
+		cin >> a >> b;
+		com[a-1].push_back(b - 1);
+		com[b-1].push_back(a-1);
+	}// link
+	//연결 완료
+
+	visit[0] = 1;
+	dfs(0);
+	cout << result;
+	//n+link
+}
