@@ -18,7 +18,7 @@ void td(int a) {
 			}
 		}
 	}
-}//n;
+}//n^2;
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -35,18 +35,18 @@ int main() {
 
 	for (int i = 1; i <= n; i++) {
 		ins[i] = 0;
-	}//n^2
+	}//n
 
 	for (int i = 0; i < link; i++)	{
 		int a, b;
 		cin >> a >> b;
 		com[a][b] = 1;
 		com[b][a] = 1;
-	}// n
+	}//link
 	//연결 완료
 
 	ins[1] = 1;
 	td(1);
 	cout << result;
-	//n^2
+	//n^2+link -> n^2
 }
