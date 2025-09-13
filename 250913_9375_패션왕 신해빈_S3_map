@@ -1,0 +1,29 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int T, n;
+	cin >> T;
+	for (int i = 0; i < T; i++) {
+		map <string,int> cloth;
+
+		cin >> n;
+		for (int j = 0; j < n; j++) {
+			string clth, typ;
+			cin >> clth >> typ;
+			
+			cloth[typ]++;
+		}
+		int result = 1;
+
+		for (auto j = cloth.begin(); j != cloth.end(); j++) {
+			result *= (j->second+1);
+		}
+		cout << result-1 << "\n";
+	}
+}
