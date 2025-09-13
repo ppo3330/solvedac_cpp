@@ -22,14 +22,14 @@ int main() {
 					cloth[k].second++;
 					cloth.pop_back();
 				}
-			}
-		}
+			}//n
+		}//n^2
 		int result = 1;
 
 	
 		for (int j = 0; j < cloth.size(); j++) {
 			result *= cloth[j].second+1;
-		}
+		}//n
 		cout << result-1 << "\n";
-	}
+	}//T*n^2
 }
