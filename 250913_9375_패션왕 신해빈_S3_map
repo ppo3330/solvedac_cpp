@@ -18,12 +18,12 @@ int main() {
 			cin >> clth >> typ;
 			
 			cloth[typ]++;
-		}
+		}//n
 		int result = 1;
 
 		for (auto j = cloth.begin(); j != cloth.end(); j++) {
 			result *= (j->second+1);
-		}
+		}n
 		cout << result-1 << "\n";
-	}
+	}n*T
 }
