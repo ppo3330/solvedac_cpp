@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int T, n;
+	cin >> T;
+	for (int i = 0; i < T; i++) {
+		vector<pair<string, int>> cloth;
+
+		cin >> n;
+		for (int j = 0; j < n; j++) {
+			string clth, typ;
+			cin >> clth >> typ;
+			cloth.push_back(make_pair(typ, 1));
+			for (int k = 0; k < cloth.size(); k++) {
+				if (cloth[k].first == typ && k != cloth.size()-1) {
+					cloth[k].second++;
+					cloth.pop_back();
+				}
+			}
+		}
+		int result = 1;
+
+	
+		for (int j = 0; j < cloth.size(); j++) {
+			result *= cloth[j].second+1;
+		}
+		cout << result-1 << "\n";
+	}
+}
