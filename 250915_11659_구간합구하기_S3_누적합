@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, M,i,j;
+	cin >> N >> M;
+
+	int num[100001];
+	for (int n = 1; n <= N; n++) {
+		cin >> num[n];
+	}//N
+
+	int sum[100001];
+	sum[0] = 0;
+	sum[1] = num[1];
+	for (int n = 2; n <= N; n++) {
+		sum[n] = num[n]+ sum[n - 1];
+	}//N
+
+	int result[1001];
+	for (int n = 0; n < M; n++) {
+		cin >> i >> j;
+		result[n] = sum[j] - sum[i - 1];
+	}//M
+
+	for (int n = 0; n < M; n++) {
+		cout << result[n] << "\n";
+	}//M
+}//N+M
