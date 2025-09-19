@@ -1,0 +1,13 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	long long int N;
+	cin >> N;
+
+	cout << N*78/100 << " " << N*8/10 + (N*156/1000);
+}O(1)
