@@ -14,7 +14,7 @@ long long int qry1(int a, int b) {
 		dp[i] = dp[i - 1] + arr[i - 1];
 	}
 	long long int c = arr[a - 1];
-	std::swap(arr[a - 1], arr[b - 1]);
+	swap(arr[a - 1], arr[b - 1]);
 	return dp[b] - dp[a - 1];
 }
 
@@ -33,7 +33,7 @@ int main() {
 	cin >> n >> q;
 	long long int a;
 	for (int i = 1; i <= n; i++) {
-		dp[i] = 0;
+		dp[i] = 0
 	}
 	for (int i = 0; i < n; i++) {
 		cin >> a;
@@ -54,5 +54,5 @@ int main() {
 		}
 		cout << "\n";
 	}
-}
+}O(n*q)
 
