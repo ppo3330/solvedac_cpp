@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int n;
+	int dp[50001];
+	int sq[224];
+	cin >> n;
+	for (int i = 0; i < n + 1; i++) {
+		dp[i] = 50001;
+	}//O(n)
+	for (int i = 1; i < 224; i++) {
+		sq[i] = i * i;
+	}
+
+	dp[1] = 1;
+	dp[2] = 2;
+	for (int i = 3; i <= n; i++) {
+		int iter = 223;
+		while (sq[iter] > i) {
+			iter--;
+		}
+		if (sq[iter] == i) {
+			dp[i] = 1;
+		}
+		else {
+			for (int j = 1; j <= iter; j++) {
+				dp[i] = min(dp[i], dp[i - sq[j]]+1);
+			}//O(1)
+		}//O(1)
+	}//O(n)
+	cout << dp[n];
+
+}//O(n)
