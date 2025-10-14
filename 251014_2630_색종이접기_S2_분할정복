@@ -1,0 +1,68 @@
+	#include <iostream>
+	#include <vector>
+	#include <algorithm>
+
+	using namespace std;
+
+	vector<vector<int>> arr;
+	int white = 0;
+	int blue = 0;
+
+	void DnQ(int xstart, int xend, int ystart,int yend) {
+		//cout << "DNQ" <<" " << xstart << " " << xend << " " << ystart << " " << yend << "\n";
+
+
+		if (xstart == xend) {
+			if (arr[xstart][yend] == 1)
+				blue++;
+			else
+				white++;
+			return;
+		}
+
+		bool block = true;
+		for (int i = xstart; i <= xend; i++) {
+			for (int j = ystart; j <= yend; j++) {
+				if (arr[i][j] != arr[xstart][ystart]) {
+					block = false;
+					break;
+				}
+			}
+		}//N^2
+		if (block) {
+			if (arr[xstart][ystart] == 1)
+				blue++;
+			else
+				white++;
+		}
+		else {
+			DnQ(xstart, (xend+xstart) / 2, ystart, (ystart+yend) / 2);
+			DnQ((xend + xstart) / 2+1, xend, ystart, (ystart + yend) / 2);
+			DnQ(xstart, (xend + xstart)/2, (ystart + yend) / 2+1, yend);
+			DnQ((xend + xstart) / 2+1, xend, (ystart + yend) / 2+1, yend);
+		}
+	}
+
+	int main() {
+		ios_base::sync_with_stdio(false);
+		cin.tie(NULL);
+
+		int N;
+		cin >> N;
+
+		for (int i = 0; i < N; i++) {
+			vector<int> v1;
+			for (int j = 0; j < N; j++) {
+				int a;
+				cin >> a;
+				v1.push_back(a);
+			}
+			arr.push_back(v1);
+		}//N^2
+
+	
+
+		DnQ(0, N - 1,0,N-1);
+		cout << white << "\n" << blue;
+
+	}//O(N^2)
