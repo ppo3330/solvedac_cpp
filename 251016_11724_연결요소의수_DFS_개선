@@ -1,0 +1,47 @@
+  //동적할당으로 개선, 변수를 전역변수가 아닌 main함수의 내부 변수로 사용
+  //const사용 : 읽기전용이라는 뜻.(변경을 안하겠다.)
+  #include <iostream>
+	#include <vector>
+	#include <algorithm>
+
+	using namespace std;
+
+	
+
+	void dfs(int n,const vector<vector<int>>& grap,vector<int>& visit,int N) {
+		visit[n] = 1;
+		for (int i = 0; i < N; i++) {
+			if (grap[n][i] == 1 && visit[i] == 0) {
+				dfs(i,grap, visit,N);
+			}
+		}
+	}
+
+	int main() {
+		ios_base::sync_with_stdio(false);
+		cin.tie(NULL);
+		
+		int N, M, u, v;
+		int result = 0;
+		vector<vector<int>> grap;
+		vector<int> visit;
+		cin >> N >> M;
+
+		grap.assign(N, vector<int>(N, 0));
+		visit.assign(N, 0);
+
+		for (int i = 0; i < M; i++) {
+			cin >> u >> v;
+			grap[--u][--v] = 1;
+			grap[v][u] = 1;
+		}
+
+		for (int i = 0; i < N; i++) {
+			if (visit[i] == 0) {
+				result++;
+				dfs(i,grap,visit,N);
+			}
+		}
+
+		cout << result;
+	}
