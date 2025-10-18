@@ -1,0 +1,42 @@
+//O(N)
+//BFS연습에 좋았다. 크기가 100000이상을 넘어갔다가 내려올경우를 생각했는데 범위를 그렇게 잡으면 안됐었는듯.
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+void bfs(vector<int>& arr,int n,int k) {
+	queue<int> q;
+	q.push(n);
+	arr[n] = 0;
+	while (!q.empty()) {
+		int x = q.front();
+		q.pop();
+		int dirx[] = { x - 1, x + 1, x * 2};
+		for (int i = 0; i < 3; i++) {
+			if (dirx[i] >= 0 && dirx[i] < 100001) {
+				if (arr[dirx[i]] > arr[x] + 1) {
+					arr[dirx[i]] = min(arr[x] + 1, arr[dirx[i]]);
+					q.push(dirx[i]);
+				}
+			}
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, K;
+	cin >> N >> K;
+	vector<int> arr;
+	arr.assign(100010, 100002);
+
+	bfs(arr, N, K);
+	
+	cout << arr[K];
+}
