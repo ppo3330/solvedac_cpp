@@ -1,0 +1,41 @@
+// O(N)
+// 그리디 알고리즘. second가 같을때는 first가 먼저 와야했음.
+// sort방식 기억하기
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N;
+	cin >> N;
+	vector<pair<int, int>> meetings;
+	for (int i = 0; i < N; i++) {
+		int start, end;
+		cin >> start >> end;
+		meetings.push_back({ start,end });
+	}
+
+	sort(meetings.begin(), meetings.end(), [](auto& a, auto& b) {
+		if (a.second == b.second) {
+			return a.first < b.first;
+		}
+		return a.second < b.second;
+	});
+	int count = 0;
+
+	int endtime = -1;
+	for (int i = 0; i < N; i++) {
+		if (meetings[i].first >= endtime) {
+			count++;
+			endtime = meetings[i].second;
+		}
+	}
+
+	cout << count;
+
+}
