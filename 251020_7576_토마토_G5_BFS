@@ -1,0 +1,66 @@
+//O(N*M)
+//bfs문제 행과 열에 관해 수를 나타낸것인지 i와j가 행을 나타내는지 헷갈렸음.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int M, N;
+	//N행M열
+	cin >> M >> N;
+	//M은 열의 수  N은 행의 수
+	vector<vector<int>> arr;
+	arr.assign(N, vector<int>(M, 0));
+	queue<pair<int, int>> q1;
+	queue<pair<int, int>> q2;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			cin >> arr[i][j];
+			if (arr[i][j] == 1) {
+				q1.push({ i,j });
+			}
+		}
+	}
+
+	int count = -1;
+	int dirn[] = {0,0,1,-1};
+	int dirm[] = { 1,-1,0,0 };
+	while (!q1.empty()) {
+		count++;
+		q2 = q1;
+		q1 = queue<pair<int, int>>();
+		while (!q2.empty()) {
+			int frontn = q2.front().first;
+			int frontm = q2.front().second;
+			q2.pop();
+			for (int i = 0; i < 4; i++) {
+				int dn = frontn + dirn[i];
+				int dm = frontm + dirm[i];
+				if (dn >= 0 && dn < N && dm >= 0 && dm < M) {
+					if (arr[dn][dm] == 0) {
+						arr[dn][dm] = 1;
+						q1.push({ dn,dm });
+					}
+				}
+			}
+
+		}
+
+	}
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (arr[i][j] == 0) {
+				cout << -1;
+				return 0;
+			}
+		}
+	}
+	cout << count;
+}
