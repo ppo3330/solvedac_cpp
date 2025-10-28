@@ -1,5 +1,5 @@
 //O(N*M)
-//모든 높이에 대해 최적값 찾기.
+//모든 높이를 보고 최적값 찾기.
 #include <iostream>
 #include <vector>
 #include <algorithm>
