@@ -1,0 +1,51 @@
+//O(N*M)
+//모든 높이에 대해 최적값 찾기.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, M, B;
+	cin >> N >> M >> B;
+
+	vector<vector<int>> arr;
+	arr.assign(N, vector<int>(M, 0));
+
+	int MIN = 256;
+	int MAX = 0;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			cin >> arr[i][j];
+		}
+	}
+
+	int MINtime = 9999999999;
+	int seth = 0;
+	for (int h = 0; h < 257; h++) {
+		int remove = 0;
+		int stack = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				if (arr[i][j] > h) remove += arr[i][j] - h;
+				else if (arr[i][j] < h) stack += h - arr[i][j];
+			}
+		}
+
+		if (remove + B >= stack) {
+			int time = remove * 2 + stack;
+			if (time <= MINtime) {
+				MINtime = time;
+				seth = h;
+			}
+		}
+
+	}
+	
+	cout << MINtime << " " << seth;
+}
