@@ -1,0 +1,62 @@
+//O(N*M)
+//BFS 문제 기본과 크게 다를 거 없음. 지금까지와 다르게 숫자가 아니었을뿐. 벽이있었다
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, M;
+	cin >> N >> M;
+
+	vector<string> arr =  vector<string>(N);
+
+	for (int i = 0; i < N; i++) {
+		cin >> arr[i];
+	}
+
+	int doN = 0;
+	int doM = 0;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (arr[i][j] == 'I') {
+				doN = i;
+				doM = j;
+			}
+		}
+	}
+
+	int result = 0;
+	queue<pair<int,int>> q;
+	q.push(make_pair(doN,doM));
+	while (!q.empty()) {
+		int dirN[] = {0, 0, 1, -1};
+		int dirM[] = { 1,-1,0,0 };
+
+		int tN = q.front().first;
+		int tM = q.front().second;
+		q.pop();
+		for (int i = 0; i < 4; i++) {
+			int forN = tN + dirN[i];
+			int forM = tM + dirM[i];
+			if (forN >= 0 && forN < N && forM >= 0 && forM < M && arr[forN][forM] != 'X') {
+				if (arr[forN][forM] == 'P')
+					result++;
+				arr[forN][forM] = 'X';
+				q.push({ forN, forM });
+			}
+		}
+	}
+
+	if (result == 0)
+		cout << "TT";
+	else
+		cout << result;
+}
+
