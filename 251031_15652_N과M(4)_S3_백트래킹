@@ -1,0 +1,35 @@
+//O(M^2 * C(N,M))
+//백트래킹 아직도 잘 모르겠음 어려움. 파이썬으로 풀었던 것과 같은 유형 c++로 풀었음
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int N, M;
+vector<int> arr;
+
+void dfs(int num, int cnt) {
+	if (cnt == M) {
+		for (int i = 0; i < M; i++) {
+			cout << arr[i] << " ";
+		}
+		cout << "\n";return;
+	}
+	for (int i = num; i <= N; i++) {
+		arr[cnt] = i;
+		dfs(i, cnt + 1);
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> N >> M;
+	arr.assign(M, 0);
+
+	dfs(1,0);
+
+	
+}
