@@ -1,0 +1,30 @@
+//O(NlogN)
+//가상의 배열을 만들어서 arr[i]값이 가상에서 가장 크면 넣고, 가상의 값중 가장 큰값이 arr[i]로 바뀔수 있으면 바꿈. 
+//lis알고리즘에서 lowerbound가 이진탐색을 이용하므로 시간복잡도가 작아짐
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N;
+	cin >> N;
+  vector<int> lis;
+
+  for (int i = 0; i < N; i++) {
+      auto it = lower_bound(lis.begin(), lis.end(), arr[i]);
+      if (it == lis.end()) {
+          lis.push_back(arr[i]);
+      }
+      else {
+          *it = arr[i];
+      }
+    }
+    cout << lis.size();
+
+}
