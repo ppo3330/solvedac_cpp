@@ -1,0 +1,67 @@
+#O(N^2)
+#dfs 인데 입력받을때 string으로 받음 + cnt와 housecount를 통해서 구역이 몇개인지 구역별로 몇개인지 정하기
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int N;
+vector<vector<int>> arr;
+int house_count;
+
+void dfs(int n, int m,int cnt) {
+	arr[n][m] = cnt;
+	int dirn[] = { 0,0,1,-1 };
+	int dirm[] = { 1,-1,0,0 };
+	for (int i = 0; i < 4; i++) {
+		int forn = dirn[i] + n;
+		int form = dirm[i] + m;
+		if (forn >= 0 && forn < N && form >= 0 && form < N) {
+			if (arr[forn][form] == 1) {
+				dfs(forn, form,cnt);
+				house_count += 1;
+			}
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> N;
+	arr.assign(N, vector<int>(N, 0));
+
+	for (int i = 0; i < N; i++) {
+		string s;
+		cin >> s;
+		for (int j = 0; j < N; j++) {
+			arr[i][j] = s[j]-'0';
+		}
+	}
+
+	int cnt = 2;
+	vector<int> result;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (arr[i][j] == 1) {
+				house_count = 1;
+				dfs(i, j, cnt);
+				result.push_back(house_count);
+				cnt++;
+			}
+		}
+	}
+
+	sort(result.begin(),result.end());
+
+	
+	cout << cnt-2;
+	for (int i = 0; i < result.size(); i++) {
+		cout << "\n" << result[i];
+	}
+
+}
