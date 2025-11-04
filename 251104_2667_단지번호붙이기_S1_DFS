@@ -1,5 +1,5 @@
-#O(N^2)
-#dfs 인데 입력받을때 string으로 받음 + cnt와 housecount를 통해서 구역이 몇개인지 구역별로 몇개인지 정하기
+//O(N^2)
+//dfs 인데 입력받을때 string으로 받음 + cnt와 housecount를 통해서 구역이 몇개인지 구역별로 몇개인지 정하기
 
 #include <iostream>
 #include <vector>
