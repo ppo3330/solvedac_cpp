@@ -1,0 +1,98 @@
+//O(M)
+//FSM구조로 풀었음.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, M;
+	cin >> N >> M;
+
+	string S;
+	cin >> S;
+
+	string Pn = "I";
+	for (int i = 0; i < N; i++) {
+		Pn += "OI";
+	}
+
+	int ptrn_cnt = 0;
+	int ptrnchk = 0;
+	bool ptrnstrt = false;
+	int result = 0;
+
+	for (int i = 0; i < M; i++) {
+		if (!ptrnstrt) {
+			if (S[i] == 'I') {
+				ptrnstrt = true;
+				ptrnchk = 1;
+			}
+		}
+		else {
+			if (ptrnchk == 1 && S[i] == 'O') {
+				ptrnchk = 0;
+			}
+			else if (ptrnchk == 0 && S[i] == 'I') {
+				ptrnchk = 1;
+				ptrn_cnt++;
+				if (ptrn_cnt >= N) {
+					result++;
+				}
+			}
+			else {
+				if (S[i] == 'I') {
+					ptrnchk = 1;
+					ptrn_cnt = 0;
+				}
+				else {
+					ptrnstrt = false;
+					ptrn_cnt = 0;
+				}
+			}
+		}
+	}
+	cout << result;
+}
+
+//패턴을 읽는방식으로. 추천되는 방식임
+//#include <iostream>
+//#include <vector>
+//#include <algorithm>
+//
+//using namespace std;
+//
+//int main() {
+//	ios_base::sync_with_stdio(false);
+//	cin.tie(NULL);
+//
+//	int N, M;
+//	cin >> N >> M;
+//
+//	string S;
+//	cin >> S;
+//
+//	string Pn = "I";
+//
+//	int result = 0;
+//	int count = 0;
+//
+//	for (int i = 1; i < M - 1; i++) {
+//		if (S[i - 1] == 'I' && S[i] == 'O' && S[i + 1] == 'I') {
+//			count++;
+//			if (count == N) {
+//				result++;
+//				count--;
+//			}
+//			i++;
+//		}
+//		else {
+//			count = 0;
+//		}
+//	}
+//	cout << result;
+//}
