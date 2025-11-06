@@ -1,0 +1,67 @@
+//O(N*M)
+//시간복잡도는 같으나 시간이 더 길수도 있다고는 함 but 구현에 있어서 더 빠름.
+//뱀게임과 같은 형태.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;	
+
+int N, M;
+vector<vector<int>> arr;
+vector<vector<int>> visited;
+int result = 0;
+int dx[4] = { 0,0,1,-1 };
+int dy[4] = { 1,-1,0,0 };
+
+void dfs(int x, int y, int cnt, int res) {
+	res += arr[x][y];
+	if (cnt == 4) {
+		result = max(res, result);
+		return;
+	}
+	for (int i = 0; i < 4; i++) {
+		int forx = dx[i] + x;
+		int fory = dy[i] + y;
+		if (forx<0 or forx>=N or fory<0 or fory>=M) continue;
+		if (visited[forx][fory] == 1) continue;
+		visited[forx][fory] = 1;
+		dfs(forx, fory, cnt + 1, res);
+		visited[forx][fory] = 0;
+	}
+
+
+}
+
+void tetT(int i, int j) {
+	if (j + 2 < M && i + 1 < N)
+		result = max({ result, arr[i][j] + arr[i][j + 1] + arr[i][j + 2] + arr[i + 1][j + 1], arr[i + 1][j] + arr[i + 1][j + 1] + arr[i + 1][j + 2] + arr[i][j + 1] });
+	if (i + 2 < N && j + 1 < M)
+		result = max({ result,arr[i][j] + arr[i + 1][j] + arr[i + 2][j] + arr[i + 1][j + 1] , arr[i][j + 1] + arr[i + 1][j + 1] + arr[i + 2][j + 1] + arr[i + 1][j] });
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+
+	cin >> N >> M;
+	arr.assign(N, vector<int>(M, 0));
+	visited.assign(N, vector<int>(M, 0));
+
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			cin >> arr[i][j];
+		}
+	}
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			visited[i][j] = 1;
+			dfs(i, j, 1, 0);
+			visited[i][j] = 0;
+			tetT(i, j);
+		}
+	}
+	cout << result;
+}
