@@ -1,0 +1,78 @@
+//O(H*N*M)
+//BFS 3차원 배열.
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;	
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, M, H;
+	cin >> M>> N >> H;
+
+	vector<vector<vector<int>>> arr;
+	
+	for (int i = 0; i < H; i++) {
+		vector<vector<int>> deck;
+		deck.assign(N, vector<int>(M, 0));
+		arr.push_back(deck);
+	}
+	
+	queue<pair<int,pair<int,int>>> q;
+	for (int h = 0; h < H; h++) {
+		for (int n = 0; n < N; n++) {
+			for (int m = 0; m < M; m++) {
+				cin >> arr[h][n][m];
+				if (arr[h][n][m] == 1) {
+					q.push({ h, {n, m} });
+				}
+			}
+		}
+	}
+
+	while (!q.empty()) {
+		pair<int, pair<int, int>> tom = q.front();
+		q.pop();
+
+		int h = tom.first;
+		int n = tom.second.first;
+		int m = tom.second.second;
+
+		int dirn[] = { 0,0,1,-1,0,0 };
+		int dirm[] = { 1,-1,0,0,0,0 };
+		int dirh[] = { 0,0,0,0,1,-1 };
+
+		for (int i = 0; i < 6; i++) {
+			int forn = dirn[i] + n;
+			int form = dirm[i] + m;
+			int forh = dirh[i] + h;
+			if (forh < 0 or forh >= H or forn < 0 or forn >= N or form < 0 or form >= M) continue;
+			if (arr[forh][forn][form] <= arr[h][n][m] + 1 and arr[forh][forn][form] != 0) continue;	
+			if (arr[forh][forn][form] == -1) continue;
+
+			arr[forh][forn][form] = arr[h][n][m] + 1;
+			q.push({ forh,{forn,form} });
+		}
+	}
+
+	int result = 0;
+	for (int h = 0; h < H; h++) {
+		for (int n = 0; n < N; n++) {
+			for (int m = 0; m < M; m++) {
+				if (arr[h][n][m] == 0) {
+					result = 0;
+					goto EXIT;
+				}
+				result = max(result, arr[h][n][m]);
+			}
+		}
+	}
+	goto EXIT;
+	EXIT:
+		cout << result-1;
+}
