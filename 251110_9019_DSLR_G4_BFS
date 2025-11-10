@@ -1,0 +1,84 @@
+//O(T*10^4)
+//평소에는 상수는 생략하지만 10^4이라는 큰 수 일뿐더라 bfs에서의 방문수는 시간복잡도에서 중요하므로
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;	
+
+int D(int n){
+	return (n * 2) % 10000;
+}
+
+int S(int n) {
+	if (n == 0) return 9999;
+	else return n - 1;
+}
+
+int L(int n) {
+	n *= 10;
+	int cnt = 0;
+	while (n >= 10000) {
+		n -= 10000;
+		cnt++;
+	}
+	return n + cnt;
+}
+
+int R(int n) {
+	int a = n % 10;
+	n /= 10;
+	return n + a * 1000;
+}
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int T;
+	cin >> T;
+	vector<int> visited;
+	vector<string> comm;
+	vector<string> result;
+	
+	for (int i = 0; i < T; i++) {
+		visited.assign(10010, 10010);
+		comm.assign(10010, "");
+		int A, B;
+		cin >> A >> B;
+
+		visited[A] = 0;
+		queue<int> q;
+		q.push(A);
+		while (!q.empty()) {
+			int cur = q.front();
+			q.pop();
+			if (visited[D(cur)] > visited[cur] + 1) {
+				visited[D(cur)] = visited[cur] + 1;
+				q.push(D(cur));
+				comm[D(cur)] = comm[cur]+"D";
+			}
+			if (visited[S(cur)] > visited[cur] + 1) {
+				visited[S(cur)] = visited[cur] + 1;
+				q.push(S(cur));
+				comm[S(cur)] = comm[cur] + "S";
+			}
+			if (visited[L(cur)] > visited[cur] + 1) {
+				visited[L(cur)] = visited[cur] + 1;
+				q.push(L(cur));
+				comm[L(cur)] = comm[cur] + "L";
+			}
+			if (visited[R(cur)] > visited[cur] + 1) {
+				visited[R(cur)] = visited[cur] + 1;
+				q.push(R(cur));
+				comm[R(cur)] = comm[cur] + "R";
+			}
+		}
+		result.push_back(comm[B]);
+	}
+	for (int j = 0; j < result.size(); j++) {
+		cout << result[j] << "\n";
+	}
+}
