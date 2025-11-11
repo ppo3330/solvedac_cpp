@@ -1,0 +1,64 @@
+//O(N);
+//이진트리 기억하기 오랜만에 하니까 어렵네...
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+
+
+typedef struct Node {
+	char element;
+	Node* leftNode = NULL;
+	Node* rightNode = NULL;
+};
+
+int N;
+vector<char> result;
+vector<Node> trees;
+
+void frntCir(int root) {
+	result.push_back(trees[root].element);
+	if (trees[root].leftNode != NULL) frntCir(trees[root].leftNode->element - 'A');
+	if (trees[root].rightNode != NULL) frntCir(trees[root].rightNode->element - 'A');
+}
+void midCir(int root) {
+	if (trees[root].leftNode != NULL) midCir(trees[root].leftNode->element - 'A');
+	result.push_back(trees[root].element);
+	if (trees[root].rightNode != NULL) midCir(trees[root].rightNode->element - 'A');
+}
+void backCir(int root) {
+	if (trees[root].leftNode != NULL) backCir(trees[root].leftNode->element - 'A');
+	if (trees[root].rightNode != NULL) backCir(trees[root].rightNode->element - 'A');
+	result.push_back(trees[root].element);
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		Node cur = Node();
+		cur.element = 'A' + i;
+		trees.push_back(cur);
+	}
+	for (int i = 0; i < N; i++) {
+		char rootN, leftN, rightN;
+		cin >> rootN >> leftN >> rightN;
+
+		if (leftN != '.') trees[rootN - 'A'].leftNode = &trees[leftN - 'A'];
+		if (rightN != '.')  trees[rootN - 'A'].rightNode = &trees[rightN - 'A'];
+	}
+
+	frntCir(0);
+	midCir(0);
+	backCir(0);
+	for (int i = 0; i < 3*N; i++) {
+		if (i!=0 and i % N == 0) cout << "\n";
+		cout << result[i];
+	}
+}
