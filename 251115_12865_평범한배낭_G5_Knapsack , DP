@@ -1,0 +1,33 @@
+//O(N * K)
+//오랜만에 배낭문제 어려웠음... 물건 루프 안에 가방 루프 도는 알고리즘을 기억해야함. 루프가 반대가 되면 아이템을 여러번 넣을 수 있게되는 문제 발생.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, K;
+	cin >> N >> K;
+
+	vector<pair<int, int>> items;
+	for (int i = 0; i < N; i++) {
+		int a, b;
+		cin >> a >> b;
+		items.push_back({ a,b});
+	}
+
+	vector<int> dp(K+1,0);
+	for (int i = 0; i < N; i++) {
+		int w = items[i].first;
+		int v = items[i].second;
+		for (int j = K; j >= w; j--) {
+			dp[j] = max(dp[j], dp[j - w] + v);
+		}
+	}
+	cout << dp[K];
+}
