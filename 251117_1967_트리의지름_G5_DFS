@@ -1,0 +1,55 @@
+//O(n)
+//dfs문제임. 트리의 가장긴 지름 문제는 아무 노드에서나 최장거리를 찾고 그 노드에서 최장거리를 찾으면 끝. 
+//dfs인데 처음거를 visited안하는 문제로 실패했었음.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int n;
+vector<vector<pair<int, int>>> linked;
+vector<bool> visited;
+int result = 0;
+int lengths = 0;
+int lastNode = 1;
+
+void dfs(int N) {
+	for (int i = 0; i < linked[N].size(); i++) {
+		int curfirst = linked[N][i].first;
+		int cursecond = linked[N][i].second;
+		
+		if (visited[curfirst] == true) continue;
+		visited[curfirst] = true;
+		lengths += cursecond;
+		if (lengths > result) {
+			result = lengths;
+			lastNode = curfirst;
+		}
+		dfs(curfirst);
+		lengths -= cursecond;
+		
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> n;
+	linked.assign(n + 1, vector<pair<int,int>>());
+	
+	for (int i = 0; i < n-1; i++) {
+		int parentNode, childNode, cost;
+		cin >> parentNode >> childNode >> cost;
+
+		linked[parentNode].push_back({childNode, cost});
+		linked[childNode].push_back({ parentNode,cost });
+	}
+	for (int i = 0; i < 2; i++) {
+		visited.assign(n + 1, false);
+		visited[lastNode] = true;
+		dfs(lastNode);
+	}
+	cout << result;
+}
