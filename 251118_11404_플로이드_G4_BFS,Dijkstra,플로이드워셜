@@ -1,0 +1,54 @@
+//O(m + n^4)
+//다익스트라가 제대로 사용 안됨. 여기서 queue를 priority_queue로 바꾸면 더 빠르게 돌아감. O(n * mlogn)
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int n, m;
+	cin >> n >> m;
+
+	vector<vector<int>> linked;
+	linked.assign(n + 1, vector<int >(n+1,1e9));
+	for (int i = 0; i < m; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		linked[a][b] = min(linked[a][b], c);
+	}
+
+	for (int k = 1; k < n + 1; k++) {
+		vector<int> dist;
+		dist.assign(n + 1, 1e9);
+		queue<int> q;
+		q.push(k);
+		dist[k] = 0;
+		while (!q.empty()) {
+			int cur_city = q.front();
+			q.pop();
+			for (int i = 1; i < n + 1; i++) {
+				int next_city = linked[cur_city][i];
+
+				if (next_city == 1e9) continue;
+				if (dist[i] <= dist[cur_city] + next_city) continue;
+			
+				dist[i] = dist[cur_city] + next_city;
+				q.push(i);
+				
+			}
+		}
+
+		
+		for (int i = 1; i < n + 1; i++) {
+			if (dist[i] == 1e9) cout << 0 << " ";
+			else cout << dist[i] << " ";
+		}
+		cout << "\n";
+	}
+}
+
