@@ -1,0 +1,76 @@
+//집 좌표 수집 = H, 치킨집 좌표 수집 = C
+//O(H*C + C choose M * H * M)
+//백트래킹으로 치킨집을 정하고 모든 집들에 대해 치킨 거리 계산.
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <cmath>
+
+using namespace std;
+
+int N, M;
+vector<vector<int>> arr;
+vector<pair<int, int>> chickenres;
+vector<pair<int, int>> houses;
+vector<vector<int>> chickenlength;
+int MINlength = 1e9;
+vector<int> selectchickenres;
+
+void countres() {
+
+	int res = 0;
+	for (int j = 0; j < houses.size(); j++) {
+		int minlen = 1e9;
+		for (int i = 0; i < M; i++) {
+			minlen = min(minlen, chickenlength[j][selectchickenres[i]]);
+		}
+		res += minlen;
+		
+	}
+	MINlength = min(MINlength, res);
+}
+
+void selectch(int n) {
+	if (selectchickenres.size() == M) {
+		countres();
+		return;
+	}
+	for (int i = n; i < chickenres.size(); i++) {
+		selectchickenres.push_back(i);
+		selectch(i + 1);
+		selectchickenres.pop_back();
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> N >> M;
+
+	arr.assign(N, vector<int>(N));
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cin >> arr[i][j];
+			if (arr[i][j] == 2)
+				chickenres.push_back({ i,j });
+			else if (arr[i][j] == 1)
+				houses.push_back({ i,j });
+		}
+	}
+
+	
+	chickenlength.assign(houses.size(), vector<int>(chickenres.size()));
+	for (int i = 0; i < houses.size(); i++) {
+		for (int j = 0; j < chickenres.size(); j++) {
+			chickenlength[i][j] = abs(houses[i].first - chickenres[j].first) + abs(houses[i].second - chickenres[j].second);
+		}
+	}
+
+	
+	selectch(0);
+
+	cout << MINlength;
+}
