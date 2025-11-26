@@ -1,0 +1,70 @@
+//O((E+V) log V)
+//dijkstra이용 int가 아니라 longlong으로 해야했음.
+//중간 조건에서 if (dist[nxt] <= curcost) continue; -> if (curcost > dist[cur]) continue;
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <cmath>
+
+typedef long long int LL;
+using namespace std;
+
+LL N, E;
+LL v1, v2;
+vector<vector<pair<LL, LL>>> arr;
+
+LL dist(LL start, LL end) {
+	vector<LL> dist;
+	dist.assign(N+1, 1e9);
+	dist[start] = 0;
+
+	priority_queue<pair<LL, LL>, vector<pair<LL, LL>>, greater<pair<LL, LL>>> pq;
+	pq.push({ 0,start });
+
+	while (!pq.empty()) {
+		LL cur = pq.top().second;
+		LL curcost = dist[cur];
+		pq.pop();
+
+		for (int i = 0; i < arr[cur].size(); i++) {
+			LL nxt = arr[cur][i].first;
+			LL nxt_cost = arr[cur][i].second;
+			LL new_cost = dist[cur] + nxt_cost;
+
+			if (dist[nxt] <= curcost) continue;
+      //if (curcost > dist[cur]) continue;
+			
+			if (dist[nxt] > new_cost) {
+				dist[nxt] = new_cost;
+				pq.push({ new_cost,nxt });
+			}
+		}
+	}
+
+	return dist[end];
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> N >> E;
+	arr.assign(N+1, vector<pair<LL, LL>>());
+
+	for (int i = 0; i < E; i++) {
+		int a, b,c;
+		cin >> a >> b>>c;
+		arr[a].push_back({ b,c });
+		arr[b].push_back({ a,c });
+	}
+
+	cin >> v1 >> v2;
+
+
+	LL MN = min(dist(1, v1) + dist(v1, v2) + dist(v2, N), dist(1, v2) + dist(v2, v1) + dist(v1, N));
+	if (MN >= 1e9) MN = -1;
+	cout << MN;
+	
+	
+}
