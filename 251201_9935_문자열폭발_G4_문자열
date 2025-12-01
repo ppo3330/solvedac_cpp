@@ -1,0 +1,45 @@
+//O(N)
+//st를 쭉 둘러보며 boom인지 확인하며 boom이 되면 삭제하고 반복.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	string st;
+	string boom;
+	vector<char> result;
+
+	cin >> st;
+	cin >> boom;
+
+	for (int i = 0; i < st.size(); i++) {
+		result.push_back(st[i]);
+		if (result.size() >= boom.size()) {
+			bool chk = false;
+			int boomlen = 0;
+			for (int j = result.size() - boom.size(); j < result.size(); j++) {
+				if (result[j] != boom[boomlen]) {
+					chk = true;
+					break;
+				}
+				boomlen++;
+			}
+			if (chk == false) {
+				for(int j=0;j<boom.size();j++){
+					result.pop_back();
+				}
+			}
+		}
+	}
+
+	
+	for (int i = 0; i < result.size(); i++) {
+		cout << result[i];
+	}
+	if (result.size() == 0) cout << "FRULA";
+}	
