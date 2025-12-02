@@ -1,0 +1,67 @@
+//O(N^3 * log B)
+//분할정복 기억하기. 처음 생각했던 방식과 비슷하지만 조금 다름.
+//original을 제곱씩 키우고 B%2 ==1일때는 result에 original을 곱하기.
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int N;
+long long int B;
+vector<vector<int>> matrix;
+vector<vector<int>> originalmatrix;
+vector<vector<int>> submatrix;
+vector<vector<int>> resultmatrix;
+
+vector<vector<int>> multmat(vector<vector<int>> amatrix, vector<vector<int>> bmatrix) {
+	vector < vector<int>> returnmat(N,vector<int>(N));
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			int x = 0;
+			for (int k = 0; k < N; k++) {
+				x += amatrix[i][k] * bmatrix[k][j];
+			}
+			returnmat[i][j] = x % 1000;
+		}
+	}
+	return returnmat;
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+
+	cin >> N >> B;
+
+	originalmatrix.assign(N, vector<int>(N));
+	resultmatrix.assign(N, vector<int>(N,0));
+	
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cin >> originalmatrix[i][j];
+		}
+		resultmatrix[i][i] = 1;
+	}
+
+
+	while (B > 0) {
+		if (B % 2 == 1) {
+			resultmatrix = multmat(resultmatrix, originalmatrix);
+		}
+		originalmatrix = multmat(originalmatrix, originalmatrix);
+		B /= 2;
+	}
+
+	
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cout << resultmatrix[i][j] << " ";
+		}
+		cout << "\n";
+	}
+}	
