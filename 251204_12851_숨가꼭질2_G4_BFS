@@ -1,0 +1,45 @@
+//O(L)
+//길의 최대 길: L
+//사실 알고리즘과 적용이 어렵지는 않았는데 실수와 문제를 캐치하지 못했음
+//순간이동시 first+1등을 잘못하는 실수
+//길이가 같을때는 푸시 하지 않고 second값만 바꿔도 됨. <- 나중에 해당값을 갱신하게 되는경우 바뀐 second값을 확인할 수 밖에 없음.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N, K;
+	cin >> N >> K;
+
+	vector<pair<int,int>> dp(100010,{1e9,0});
+
+	queue<int> q;
+	q.push(N);
+	dp[N].first = 0;
+	dp[N].second = 1;
+	while (!q.empty()) {
+		int cur = q.front();
+		q.pop();
+
+		int nexts[] = { cur + 1, cur - 1, cur * 2 };
+		for (int next : nexts) {
+			if (next < 0 or next > 100000) continue;
+
+			if (dp[next].first > dp[cur].first + 1) {
+				dp[next].first = dp[cur].first+1;
+				dp[next].second = dp[cur].second;
+				q.push(next);
+			}
+			else if (dp[next].first == dp[cur].first + 1) {
+				dp[next].second += dp[cur].second;
+			}
+		}
+	}
+	cout << dp[K].first << "\n" << dp[K].second;
+}	
