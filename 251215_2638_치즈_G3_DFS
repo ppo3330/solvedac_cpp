@@ -1,0 +1,78 @@
+//O((NM)^2)
+//dfs이용 별거 없음. 바깥에 있는 치즈를 찾기 위해 바깥쪽만 쭉 돌면서 dfs로 바깥 치즈를 찾음.
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int N, M;
+int result = 0;
+
+vector<vector<int>> arr;
+vector<vector<int>> visited;
+int dirx[] = { 0,0,-1,1 };
+int diry[] = { 1,-1,0,0 };
+
+void dfs(int x,int y) {
+	visited[x][y] = -1;
+	for (int i = 0; i < 4; i++) {
+		int forx = dirx[i] + x;
+		int fory = diry[i] + y;
+		if (forx < 0 or forx >= N or fory < 0 or fory >= M) continue;
+		
+		if (visited[forx][fory] == 0 and arr[forx][fory] == 0) dfs(forx, fory);
+		if (arr[forx][fory] == 1) visited[forx][fory]++;
+	}
+}
+
+void melt_cheese() {
+	visited.assign(N, vector<int>(M, 0));
+	for (int i = 0; i < N; i++) {
+		if (visited[i][0] == 0)
+			dfs(i, 0);
+		if (visited[i][M - 1] == 0)
+			dfs(i, N - 1);
+	}
+	for (int i = 0; i < M; i++) {
+		if (visited[0][i] == 0)
+			dfs(i, 0);
+		if (visited[N-1][i] == 0)
+			dfs(i, N - 1);
+	}
+
+
+
+	int cnt = 0;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (visited[i][j] >= 2) {
+				arr[i][j] = 0;
+				cnt++;
+			}
+		}
+	}
+	if (cnt > 0) {
+		result++;
+		melt_cheese();
+	}
+
+}
+
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> N >> M;
+	arr.assign(N, vector<int>(M, 0));
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			cin >> arr[i][j];
+		}
+	}
+	melt_cheese();
+	cout << result;
+	
+
+}
