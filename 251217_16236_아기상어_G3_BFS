@@ -1,0 +1,106 @@
+//O(n^4)
+//그리 어려운 문제는 아니었지만 bfs 순서를 맞춰도 찾아지는 즉시 먹는 방식으로는 잘못됨.
+//먹을 수 있는 물고기를 다 찾고 거리가 짧은것 그리고 우선순위에 맞는것으로 선택햐애함.
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int sharkx;
+int sharky;
+int shark_size = 2;
+int shark_food = 0;
+int n;
+int presen_time = 0;
+vector<vector<int>> arr;
+int dirx[] = { -1,0,0,1 };
+int diry[] = { 0,-1,1,0 };
+
+void bfs() {
+	queue<pair<int, int>> q;
+	q.push({ sharkx, sharky });
+	vector<vector<int>> visited(n, vector<int>(n, 1e9));
+	int fishx = 1e9;
+	int fishy = 1e9;
+	int result_dist=0;
+	visited[sharkx][sharky] = 0;
+	
+	while (!q.empty()) {
+		int curx = q.front().first;
+		int cury = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int forx = curx + dirx[i];
+			int fory = cury + diry[i];
+
+			if (forx < 0 or forx >= n or fory < 0 or fory >= n) continue;
+			if (arr[forx][fory] > shark_size) continue;
+
+			if (arr[forx][fory] < shark_size and arr[forx][fory] != 0) {
+				if (result_dist == 0) {
+					result_dist = visited[curx][cury] + 1;
+					fishx = forx;
+					fishy = fory;
+				}
+				else if (result_dist > visited[curx][cury] + 1) {
+					result_dist = visited[curx][cury] + 1;
+					fishx = forx;
+					fishy = fory;
+				}
+				else if (result_dist == visited[curx][cury]+1) {
+					if (fishx == 1e9 or forx < fishx or (forx == fishx and fory < fishy)) {
+						fishx = forx;
+						fishy = fory;
+					}
+				}
+			}
+			if ((arr[forx][fory] == shark_size or arr[forx][fory] == 0 )and visited[forx][fory] > visited[curx][cury] + 1) {
+				visited[forx][fory] = visited[curx][cury] + 1;
+				q.push({ forx,fory });
+			}
+			
+		}
+	}
+	if (result_dist == 0)
+		return;
+	sharkx = fishx;
+	sharky = fishy;
+	arr[fishx][fishy] = 0;
+	presen_time += result_dist;
+	shark_food++;
+	if (shark_food == shark_size) {
+		shark_food = 0;
+		shark_size++;
+	}
+	
+}
+
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> n;
+
+	arr.assign(n, vector<int>(n, 0));
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> arr[i][j];
+			if (arr[i][j] == 9) {
+				sharkx = i;
+				sharky = j;
+				arr[i][j] = 0;
+			}
+		}
+	}
+	int curtime = 0;
+	while (true) {
+		curtime = presen_time;
+		bfs();
+		if (curtime == presen_time)
+			break;
+	}
+	cout << presen_time;
+}
