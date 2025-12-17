@@ -1,0 +1,65 @@
+//O( (n+m)log n )
+//다익스트라 조건 기억하기.
+//버스 입력받는법 기억해보기
+//prev대신 parent로 기억해놓고 나중에 역추적
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int n, m;
+	cin >> n >>m;
+	vector<unordered_map<int, int>> buses(n+1);
+	for (int i = 0; i < m; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		
+		if (!buses[a].count(b) or buses[a][b] > c)
+			buses[a][b] = c;
+	}
+	int st, ed;
+	cin >> st >> ed;
+
+	vector<int> dist(n+1,1e9);
+	vector<int> parent(n + 1, -1);
+	priority_queue < pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
+	q.push({ 0,st });
+	dist[st] = 0;
+	parent[st] = st;
+	while (!q.empty()) {
+		int cur = q.top().second;
+		int cost = q.top().first;
+		q.pop();
+		for(auto nxt:buses[cur]) {
+			int nxtcity = nxt.first;
+			int nxtcost = nxt.second;
+			int new_cost = dist[cur] + nxtcost;
+
+			if (cost > dist[cur]) continue;
+			if ( new_cost < dist[nxtcity]) {
+				dist[nxtcity] = new_cost;
+				q.push({ new_cost,nxtcity });
+				parent[nxtcity] = cur;
+			}
+		}
+	}
+
+	cout << dist[ed]<<"\n";
+	vector<int> path;
+	for (int cur = ed; cur != parent[cur]; cur = parent[cur]) {
+		path.push_back(cur);
+	}
+	path.push_back(st);
+	reverse(path.begin(), path.end());
+
+	cout << path.size() << "\n";
+	for (int city : path)
+		cout << city << " ";
+}
