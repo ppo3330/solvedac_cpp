@@ -1,0 +1,112 @@
+//O(N log N)
+//이진 탐색을 이용 
+//n의 크기 때문에 최대 크기를 1e9로 설정했던게 문제였음.
+//N이2일떄 for문을 N-2까지로 해놓으면 for문이 돌지않는게 문제였음.
+//-> 해결
+// 투포인트로도 해결 가능 -> 밑에
+#include <iostream>
+#include <vector>
+#define LL long long
+
+using namespace std;
+
+vector<LL> sol;
+int first_sol;
+int second_sol;
+
+LL search(int st, int ed, LL sol1) {
+	LL result = 1e11;
+	while (st <= ed) {
+		int mid = (st + ed) / 2;
+		LL sum = sol1 + sol[mid];
+
+		if (abs(sum) < result) {
+			first_sol = sol1;
+			second_sol = sol[mid];
+			result = abs(sum);
+		}
+
+		if (sum > 0) ed = mid - 1;
+		else if (sum < 0) st = mid + 1;
+		else return 0;
+
+	}
+	return result;
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N;
+	LL answer = 1e11;
+	LL resultsol1 = 0;
+	LL resultsol2 = 0;
+	cin >> N;
+	sol.assign(N, 0);
+
+	for (int i = 0; i < N; i++) {
+		cin >> sol[i];
+	}
+
+	for (int i = 0; i < N - 1; i++) {
+		LL n = search(i + 1, N - 1, sol[i]);
+		if (n == 0) {
+			cout << first_sol << " " << second_sol;
+			return 0;
+		}
+		if (n < answer) {
+			resultsol1 = first_sol;
+			resultsol2 = second_sol;
+			answer = n;
+		}
+	}
+
+	cout << resultsol1 << " " << resultsol2;
+
+}
+
+/*
+#include <iostream>
+#include <vector>
+#define LL long long
+
+using namespace std;
+
+vector<LL> sol;
+vector<LL> results(2);
+LL result = 1e11;
+
+void search(int left, int right) {
+	while (left < right) {
+		LL ans_temp = sol[left] + sol[right];
+
+		if (result > abs(ans_temp)) {
+			result = abs(ans_temp);
+			results[0] = sol[left];
+			results[1] = sol[right];
+		}
+		if (ans_temp > 0) {
+			right--;
+		}
+		else left++;
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int N;
+	LL answer = 1e9;
+	cin >> N;
+	sol.assign(N,0);
+
+	for (int i = 0; i < N; i++) {
+		cin >> sol[i];
+	}
+
+	search(0, N - 1);
+	cout << results[0] << " " << results[1];
+}
+*/
