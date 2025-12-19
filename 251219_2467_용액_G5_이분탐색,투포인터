@@ -4,6 +4,7 @@
 //N이2일떄 for문을 N-2까지로 해놓으면 for문이 돌지않는게 문제였음.
 //-> 해결
 // 투포인트로도 해결 가능 -> 밑에
+// 투포인트: O(N)
 #include <iostream>
 #include <vector>
 #define LL long long
