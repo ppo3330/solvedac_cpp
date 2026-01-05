@@ -1,0 +1,62 @@
+//O(N+M)
+//최소 스패닝 트리를 언제 쓰는지 알아야함.(최소로 연결되어 있는 마을) + 하는 방법 기억하기 
+//두 마을로 나누는 방식은 최소 스패닝 트리를 구한 이후에 가장 큰 값의 길 하나만 자르는 것임.(실제로 그림을 그려보고 이해함)
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int N, M;
+vector<int> parent;
+
+int find_parent(int x) {
+	while (parent[x] != x) {
+		x = parent[x];
+	}
+	return x;
+}
+
+void union_parent(int a, int b) {
+	a = find_parent(a);
+	b = find_parent(b);
+	if (a < b) {
+		parent[b] = a;
+	}
+	else {
+		parent[a] = b;
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> N >> M;
+
+	vector<pair<int, pair<int, int>>> roots;
+
+	for (int i = 0; i < M; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		roots.push_back({ c,{a,b} });
+	}
+	sort(roots.begin(), roots.end());
+	parent.assign(N+1,0);
+	for (int i = 0; i < N+1; i++) {
+		parent[i] = i;
+	}
+	int result = 0;
+	int MX = 0;
+	for (int i = 0; i < M; i++) {
+		int a = find_parent(roots[i].second.first);
+		int b = find_parent(roots[i].second.second);
+		if (a != b) {
+			union_parent(a, b);
+			MX = max(MX, roots[i].first);
+			result += roots[i].first;
+		}
+	}
+
+	cout << result-MX;
+}
