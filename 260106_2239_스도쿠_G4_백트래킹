@@ -1,0 +1,75 @@
+//O(9^E) E<= 81 E는 빈칸의 수
+//그러나 빈칸의 제약이 많으므로 평균은 훨씬 작음. 
+//백트래킹도 대충 예상 했으나 백트래킹 구현에 있어서 어려움을 겪었음.
+//return true를 이용하여 원하는 결과에서 밖으로 나오기 and k를 다 넣어봤는데 안되는경우 return false로 이전으로 재귀
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+
+using namespace std;
+
+vector<vector<int>> arr(9, vector<int>(9));
+
+bool is_possible(int x, int y,int n) {
+	for (int i = 0; i < 9; i++) {
+		if (arr[x][i] == n)
+			return false;
+		if (arr[i][y] == n)
+			return false;
+	}
+	int xloc = x % 3;
+	int yloc = y % 3;
+	for (int i = x - xloc; i < x - xloc+3; i++) {
+		for (int j = y - yloc; j < y - yloc + 3; j++) {
+			if (arr[i][j] == n) return false;
+		}
+	}
+	return true;
+}
+
+void print_arr() {
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			cout << arr[i][j];
+		}
+		cout << "\n";
+	}
+
+}
+
+bool insert_num() {
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			if (arr[i][j] == 0) 
+			{
+				for (int k = 1; k < 10; k++) {
+					if (is_possible(i, j, k)) {
+						arr[i][j] = k;
+						if (insert_num()) return true;;
+						arr[i][j] = 0;
+					}
+				}
+				return false;
+			}
+		}
+	}
+	print_arr();
+	return true;
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	
+	for (int i = 0; i < 9; i++) {
+		string n;
+		cin >> n;
+		for (int j = 0; j < 9; j++) {
+			arr[i][j] = int(n[j]-'0');
+		}
+	}
+
+	insert_num();
+}
