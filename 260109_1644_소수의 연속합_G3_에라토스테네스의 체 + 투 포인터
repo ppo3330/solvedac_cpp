@@ -1,0 +1,52 @@
+//O(N log log N)
+//에라토스테네스의 체(N log log N) + 투포인터(N/ log N): 소수의 수 근사치
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int N;
+	cin >> N;
+	
+	vector<int> primenums(N+1,1);
+	vector<int> primenum;
+
+	if (N == 1) {
+		cout << 0;
+		return 0;
+	}
+	primenums[1] = 0;
+	for (int i = 2; i < N + 1; i++) {
+	if (primenums[i] == 1) {
+		primenum.push_back(i);
+	}
+	if (primenums[i] == 1) {
+		for (int j = i * 2; j < N + 1; j += i) {
+			primenums[j] = 0;
+		}
+	}
+}
+	
+	int left = 0;
+	int right = 0;
+	int sum = primenum[0];
+	int result = 0;
+	while (left <= right and right < primenum.size()) {
+		if (sum >= N) {
+			if(sum == N)
+				result ++;
+			sum -= primenum[left++];
+		}
+		else {
+			if (++right >= primenum.size())
+				break;
+			sum += primenum[right];
+		}
+	}
+	cout << result;
+}
