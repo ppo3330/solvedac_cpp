@@ -1,0 +1,61 @@
+//O(seq)
+//dp이고 생각보다 어려운 문제는 아니었던것 같은데 어려웠음. dp는 생각했으나 ㅜㅜ
+//스텝을 루프로 돌며 모든 발의 구성에 대해서 가능 하면 dp에 적는 방식이었음.
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int rule(int foot,int table) {
+	if (foot == 0)
+		return 2;
+	else if (foot == table) {
+		return 1;
+	}
+	else if (abs(foot - table) == 2) return 4;
+	return 3;
+}
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	vector<int> seq;
+	while (true){
+		int n;
+		cin >> n;
+		if (n == 0)
+			break;
+		seq.push_back(n);
+	}
+
+	int sz = seq.size();
+	vector<vector<vector<int>>> dp(sz + 1, vector<vector<int>>(5, vector<int>(5, 1e9)));
+
+	dp[0][0][0] = 0;
+	for (int i = 1; i < sz+1; i++) {
+
+		for (int l = 0; l < 5; l++) {
+			for (int r = 0; r < 5; r++) {
+				if (dp[i-1][l][r] == 1e9) continue;
+				int n = seq[i - 1];
+				int left = rule(l, n);
+				int right = rule(r, n);
+
+				if (n != l)
+					dp[i][l][n] = min(dp[i][l][n], dp[i - 1][l][r] + right);
+				if(n!= r)
+					dp[i][n][r] = min(dp[i][n][r], dp[i - 1][l][r] + left);
+			}
+		}
+	}
+	int ans = 1e9;
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			ans = min(ans, dp[sz][i][j]);
+		}
+	}
+	cout << ans;
+}
