@@ -1,0 +1,58 @@
+//O(sz1 * sz2)
+//LCS는 DP를 이용하는데 이걸 좀 기억해보기...
+//앞에 " "추가, 같으면  dp[i - 1][j - 1] + 1;, 다르면 max(dp[i - 1][j], dp[i][j - 1]);
+//최장 수열을 찾는 방법은 역추적.
+//같으면 추가 그리고 i-- j-- / 다르면 i--, j--1중에 큰값으로 이동
+
+#include <iostream>
+#include <vector>
+#include <deque>
+
+using namespace std;
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	string s1, s2;
+	cin >> s1 >> s2;
+	s1 = ' ' + s1;
+	s2 = ' ' + s2;
+	int sz1 = s1.size();
+	int sz2 = s2.size();
+
+	vector<vector<int>> dp(sz1, vector<int>(sz2, 0));
+
+	for (int i = 0; i < sz1; i++) {
+		for (int j = 0; j < sz2; j++) {
+			if (i == 0 or j == 0) continue;
+			if (s1[i] == s2[j]) dp[i][j] = dp[i - 1][j - 1] + 1;
+			else dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+		}
+	}
+
+
+
+	deque<char> result;
+	int i = sz1 - 1;
+	int j = sz2 - 1;
+	while (i > 0 and j > 0) {
+		if (s1[i] == s2[j]) {
+			result.push_front(s1[i]);
+			i--;
+			j--;
+		}
+		else if (dp[i][j - 1] > dp[i - 1][j]) {
+			j--;
+		}
+		else {
+			i--;
+		}
+	}
+	cout << result.size()<<"\n";
+	for (int i = 0; i < result.size(); i++) {
+		cout << result[i];
+	}
+}
