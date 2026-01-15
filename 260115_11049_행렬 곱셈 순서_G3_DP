@@ -1,0 +1,87 @@
+//O(N ^3)
+//구현이 어려웠음. DP도 생각했으나 어렵게 접근한듯. 중간을 k로 나누는것을 왜 안했지 ㅠ
+//쓸데 없는 dp를 구하려고했었음. st~ed까지 곱한값. 이는 필요없는 값임.
+//bottom up 방식도 가능. ( 길이를 기준으로 도는것)
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<vector<int>> mat;
+vector<vector<int>> resultdp;
+
+int mincal(int st, int ed) {
+	if (st == ed)
+		return 0;
+	if (resultdp[st][ed] != -1) {
+		return resultdp[st][ed];
+	}
+	resultdp[st][ed] = 1e20;
+	for (int k = st; k < ed; k++) {
+		resultdp[st][ed] = min(resultdp[st][ed],
+			mincal(st, k) + mincal(k+1, ed) + mat[st][0] * mat[k][1] * mat[ed][1]);
+	}
+	
+	return resultdp[st][ed];
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int N;
+	cin >> N;
+
+	mat.assign(N, vector<int>(2, 0));
+	resultdp.assign(N, vector<int>(N, -1));
+	
+	for (int i = 0; i < N; i++) {
+		cin >> mat[i][0] >> mat[i][1];
+	}
+
+	cout << mincal(0, N - 1);
+}
+
+/*
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<vector<int>> mat;
+vector<vector<int>> dp;
+
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int N;
+	cin >> N;
+
+
+	mat.assign(N, vector<int>(2, 0));
+	dp.assign(N, vector<int>(N, 0));
+	
+	for (int i = 0; i < N; i++) {
+		cin >> mat[i][0] >> mat[i][1];
+	}
+
+	for (int len = 1; len<= N; len++) {
+		for (int i = 0; i+len < N;i++) {
+			int j = i+ len;
+			dp[i][j] = 1e20;
+			for (int k = i; k < j; k++) {
+				dp[i][j] = min(dp[i][j], 
+					dp[i][k] + dp[k + 1][j] + mat[i][0] * mat[k][1] * mat[j][1]);
+			}
+		}
+	}
+	cout << dp[0][N - 1];
+}
+*/
