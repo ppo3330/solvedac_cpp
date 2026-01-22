@@ -1,0 +1,57 @@
+//O(N* (1<<N))
+//솔직히 비트 마스킹 어렵다...
+//마스킹루프 안에 last루프 넣기.
+//처음시작을 고정해두어야함. 어차피 루프가 생성되면 시작이 어디인지 상관이없음. 
+//마지막에 돌아오는거 더하기 , 마지막에 돌아올 수 없으면 continue하기
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int N;
+	cin >> N;
+
+	int W[17][17];
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cin >> W[i][j];
+		}
+	}
+
+	static int DP[17][1 << 16];
+	for (int i = 0; i < 17; i++)
+		for (int j = 0; j < (1 << 16); j++)
+			DP[i][j] = 1e9;
+
+	DP[0][1 << 0] = 0;
+
+
+	for (int mask = 0; mask < (1 << N); mask++) {
+		for (int last = 0; last < N; last++) {
+			int cur = DP[last][mask];
+			if ( !(mask & (1 << last)) ) continue;
+			if (cur == 1e9) continue;
+			for (int nxt = 1; nxt < N; nxt++) {
+				if (W[last][nxt] == 0) continue;
+				if (mask & (1 << nxt)) continue;
+				DP[nxt][mask | (1 << nxt)] = min(DP[nxt][mask | (1 << nxt)], cur + W[last][nxt]);
+			}
+		}
+	}
+
+	int FULL = (1 << N) - 1;
+	int result = 1e9;
+	for (int i = 1; i < N; i++) {
+		if (W[i][0] == 0) continue;
+		result = min(result, DP[i][FULL] + W[i][0]);
+	}
+
+	cout << result;
+
+}
