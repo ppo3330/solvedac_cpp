@@ -1,0 +1,95 @@
+//O(4^9)
+//어후... 생각한걸 구현하기가 너무 어려웠음 + 이동방식에 어려움 겪음
+//이동방식을 그냥 두개가 서로 신경쓰지말고 움직임.
+//움직이는 과정에서 파랑이 들어가면 실패 빨강만 들어가면 성공
+//서로 겹치는 경우 이전 위치 확인하여 위치 조정 <- 이전위치와의 거리를 이용해도 가능.
+//원래는 BFS로 풀어야한다는 듯.(DFS의 경우 같은 자리에서 움직이지 못하는 움직임들을 계속 함, 그러나 계산상 시간에 될 것 같아서 dfs로 풀려고했었음. 실제로도 가능)
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<string> arr(10);
+pair<int, int> r;
+pair<int, int> b;
+int dx[4] = { -1, 1, 0, 0 };
+int dy[4] = { 0, 0, -1, 1 };
+int result = 1e9;
+
+
+int move(int dir) {
+    int n_rx = r.first, n_ry = r.second, n_bx = b.first, n_by = b.second;
+
+    while (arr[n_bx + dx[dir]][n_by + dy[dir]] == '.') {
+        n_bx += dx[dir];
+        n_by += dy[dir];
+    }
+    if (arr[n_bx + dx[dir]][n_by + dy[dir]] == 'O') return -1;
+
+    while (arr[n_rx + dx[dir]][n_ry + dy[dir]] == '.')
+    {
+        n_rx += dx[dir];
+        n_ry += dy[dir];
+    }
+    if (arr[n_rx + dx[dir]][n_ry + dy[dir]] == 'O')
+        return 1;
+
+    if ((n_rx == n_bx) && (n_ry == n_by))
+    {
+        if (dir == 0)
+            r.first < b.first ? n_bx++ : n_rx++;
+        else if (dir == 1)
+            r.first > b.first ? n_bx-- : n_rx--;
+        else if (dir == 2)
+            r.second < b.second ? n_by++ : n_ry++;
+        else
+            r.second > b.second ? n_by-- : n_ry--;
+    }
+    r = { n_rx, n_ry };
+    b = { n_bx, n_by };
+    return 0;
+}
+
+void func(int cnt)
+{
+    if (cnt >= 10)
+        return;
+
+    for (int dir = 0; dir < 4; dir++)
+    {
+        auto tmp_r = r, tmp_b = b;
+        int flag = move(dir);
+        if (flag == -1)
+            continue;
+        else if (flag == 1)
+        {
+            result = min(result, cnt + 1);
+            continue;
+        }
+        else
+            func(cnt + 1);
+        r = tmp_r;
+        b = tmp_b;
+    }
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int N, M;
+    cin >> N >> M;
+
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
+        for (int j = 0; j < M; j++) {
+            if (arr[i][j] == 'B') b = { i,j }, arr[i][j] = '.';
+            if (arr[i][j] == 'R') r = { i,j }, arr[i][j] = '.';
+        }
+    }
+
+    func(0);
+    cout << ((result == 1e9) ? -1 : result);
+   }
