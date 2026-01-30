@@ -1,0 +1,56 @@
+//O(P)
+//union-find 그리디 문제 알고리즘은 쉽게짰으나
+//parent[parent_n]--;을 parent[n]으로 두는 실수를 했음.
+//어떤값을 다루고 있는지 정확히 인지하기.
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int G, P;
+int result = 0;
+vector<int> parent;
+vector<int> planes;
+
+
+int find_parent(int a) {
+    while (parent[a] != parent[parent[a]]) {
+        parent[a] = parent[parent[a]];
+    }
+
+    return parent[a];
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> G >> P;
+
+    for (int i = 0; i <= G; i++) {
+        parent.push_back(i);
+    }
+
+    for (int i = 0; i < P; i++) {
+        int n;
+        cin >> n;
+        planes.push_back(n);
+    }
+
+    for (int i = 0; i < P; i++) {
+        int n = planes[i];
+        int parent_n = find_parent(n);
+
+        if (parent_n == 0)
+            break;
+
+        parent[parent_n]--;
+        result++;
+
+
+    }
+
+    cout << result;
+}
