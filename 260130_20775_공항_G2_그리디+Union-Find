@@ -3,6 +3,9 @@
 //parent[parent_n]--;을 parent[n]으로 두는 실수를 했음.
 //어떤값을 다루고 있는지 정확히 인지하기.
 
+//알고리즘 이해: 크루스칼 - 최소 신장 트리 문제
+                union-find - 집합 합치기 + 대표 찾기 -> 사이클 판별, 이를 통해 크루스칼에 사용됨.
+
 #include <iostream>
 #include <vector>
 
