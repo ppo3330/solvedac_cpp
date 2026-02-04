@@ -1,0 +1,48 @@
+//O(n)
+//중위순환: inorder (left root right)
+//전위순환: preorder(root left right)
+//후위순환: postorder(left right root)
+
+//후위순환은 맨뒤가 루트임을 이용, 전위순환의 순서이용하여서 (후위순환의 맨 뒤인 루트 push 하고 앞의 범위, 뒤의 범위 분할정복.)
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int n;
+int inorder[100001] = {};
+int postorder[100001] = {};
+int indexinorder[100001] = {};
+vector<int> result;
+
+void getpreorder(int instart, int inend, int poststart, int postend) {
+    if (instart > inend or poststart > postend) return;
+
+    int root = indexinorder[postorder[postend]];
+    int left = root - instart;
+    result.push_back(postorder[postend]);
+    getpreorder(instart, root - 1, poststart, poststart + left-1);
+    getpreorder(root + 1, inend, poststart + left, postend-1);
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
+        cin >> inorder[i];
+        indexinorder[inorder[i]] = i;
+    }
+    for (int i = 0; i < n; i++) {
+        cin >> postorder[i];
+    }
+
+    getpreorder(0, n - 1, 0, n - 1);
+    for (int i = 0; i < result.size(); i++) {
+        cout << result[i]<<" ";
+    }
+}
