@@ -1,0 +1,100 @@
+//O(C(RC+M)) 중간에 있는 함수별 시간복잡도 확인하기
+//sharkmove()의 시간복잡도 : O(M * (R+C)), but since R,C ≤ 100 → effectively O(M)
+//구현인데 상어가 자신을 잡아먹는 실수 + 움직임을 %를 통해서 최적화하기
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int R, C, M;
+int dx[] = { 0,-1,1,0,0 };
+int dy[] = { 0,0,0,1,-1 };
+vector<vector<int>> arr(101,vector<int>(101,-1));
+
+
+struct Shark {
+    int r=0, c=0, s=0, d=0, z=0;
+    bool exist = true;
+};
+vector<Shark> sharks(10001);
+
+void sharkmove() {
+    for (int i = 0; i < M; i++) {
+        if (sharks[i].exist == false) continue;
+        int swim;
+        if (sharks[i].d <= 2) swim = sharks[i].s % (2 * (R - 1));
+        else swim = sharks[i].s %( 2 * (C - 1));
+
+        for (int j = 0; j < swim; j++) {
+            if (sharks[i].d == 1 and sharks[i].r == 0) sharks[i].d = 2;
+            if (sharks[i].d == 2 and sharks[i].r == R - 1) sharks[i].d = 1;
+            if (sharks[i].d == 3 and sharks[i].c == C - 1) sharks[i].d = 4;
+            if (sharks[i].d == 4 and sharks[i].c == 0) sharks[i].d = 3;
+
+            sharks[i].r += dx[sharks[i].d];
+            sharks[i].c += dy[sharks[i].d];
+        }
+    }
+}
+
+void sharkposition() {
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            arr[i][j] = -1;
+        }
+    }
+    for (int i = 0; i < M; i++) {
+        if (sharks[i].exist == false) continue;
+
+        if (arr[sharks[i].r][sharks[i].c] == -1) arr[sharks[i].r][sharks[i].c] = i;
+        else {
+            if (sharks[arr[sharks[i].r][sharks[i].c]].z > sharks[i].z) {
+                sharks[i].exist = false;
+            }
+            else {
+                sharks[arr[sharks[i].r][sharks[i].c]].exist = false;
+                arr[sharks[i].r][sharks[i].c] = i;
+            }
+        }
+    }
+}
+
+int fishing(int fisher) {
+    for (int i = 0; i < R; i++) {
+        if (arr[i][fisher] != -1) {
+            sharks[arr[i][fisher]].exist = false;
+            return sharks[arr[i][fisher]].z;
+        }
+    }
+    return 0;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> R >> C >> M;
+    for (int i = 0; i < M; i++) {
+        int r, c, s, d, z;
+        cin >> r >> c >> s >> d >> z;
+        sharks[i].r = r-1;
+        sharks[i].c = c-1;
+        sharks[i].s = s;
+        sharks[i].d = d;
+        sharks[i].z = z;
+    }
+    
+    int result = 0;
+    sharkposition();
+    
+    for (int i = 0; i < C; i++) {
+        result += fishing(i); //R
+        sharkmove();// O(M * (R+C)), but since R,C ≤ 100 → effectively O(M)
+        sharkposition(); //RC + M
+    }
+
+    cout << result;
+}
+
