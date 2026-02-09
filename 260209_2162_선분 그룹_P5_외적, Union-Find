@@ -1,0 +1,101 @@
+#O(N^2)
+#외적 + union-find알고리즘
+#외적 방식 기억하기. (둘다 0일때: 같은 직선상에 있을때, 점들의 위치를 순서대로 두고 겹치는지 확인 / 둘다 <=0 일때 cross)
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#define pii pair<int,int>
+
+int N;
+vector<pair<pii, pii>> cordis;
+int parent[3001] = {};
+
+int ccw(pii p1, pii p2, pii p3) {
+    int s = p1.first * p2.second + p2.first * p3.second + p3.first * p1.second;
+    s -= p1.second * p2.first + p2.second * p3.first + p3.second * p1.first;
+
+    if (s > 0) return 1;
+    else if (s == 0) return 0;
+    else return -1;
+}
+
+bool cross(int st,int ed) {
+    pii p1 = cordis[st].first;
+    pii p2 = cordis[st].second;
+    pii p3 = cordis[ed].first;
+    pii p4 = cordis[ed].second;
+
+    int p1p2 = ccw(p1, p2, p3) * ccw(p1, p2, p4);
+    int p3p4 = ccw(p3, p4, p1) * ccw(p3, p4, p2);
+
+    if (p1p2 == 0 and p3p4 == 0) {
+        if (p1 > p2) swap(p1, p2);
+        if (p3 > p4) swap(p3, p4);
+
+        if (p2 < p3 or p1 > p4) return false;
+        return true;
+    }
+    if (p1p2 <= 0 and p3p4 <= 0) {
+        return true;
+    }
+    return false;
+}
+
+int findx(int x) {
+    if (x != parent[x]) {
+        parent[x] = findx(parent[x]);
+    }
+    x = parent[x];
+    return x;
+}
+
+void unionx(int a, int b) {
+    a = findx(a);
+    b = findx(b);
+
+    if (a <= b) {
+        parent[b] = a;
+    }
+    else {
+        parent[a] = b;
+    }
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> N;
+    for (int i = 0; i < N; i++) {
+        int a, b, c, d;
+        cin >> a >> b >> c >> d;
+        cordis.push_back({ {a,b},{c,d} });
+    }
+
+    for (int i = 0; i < N; i++) {
+        parent[i] = i;
+    }
+
+    for (int i = 0; i < N-1; i++) {
+        for (int j = i + 1; j < N; j++) {
+            if (cross(i, j)) {
+                unionx(i, j);
+            }
+        }
+    }
+    int result = 0;
+    int maxresult = 0;
+    int cnt[3001] = { 0, };
+    for (int i = 0; i < N; i++) {
+        int cur = findx(i);
+        cnt[cur]++;
+        if (cnt[cur] == 1) result++;
+        maxresult = max(cnt[cur], maxresult);
+    }
+    cout << result<<"\n"<<maxresult;
+}
+
