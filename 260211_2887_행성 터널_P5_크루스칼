@@ -1,0 +1,80 @@
+//O(N log N)
+//거리 계산 법을 잘못 봤음. -> x,y,z로 거리를 따로 재서 link에 넣고 최소 스패닝 트리 문제로풀었음.(크루스칼)
+//!다익스트라는 모든점들을 연결하는게 아니라 한점에서 특정점으로 가는 최소 거리임
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+#define LL long long int
+int parents[100001] = {};
+int N;
+
+int find_parent(int x) {
+    if (x != parents[x]) {
+        parents[x] = find_parent(parents[x]);
+    }
+    x = parents[x];
+    return x;
+}
+
+bool union_p(int a, int b) {
+    a = find_parent(a);
+    b = find_parent(b);
+
+    if (a == b)
+        return false;
+
+    if (a > b)
+        parents[b] = a;
+    else
+        parents[a] = b;
+    return true;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> N;
+
+    vector<vector<pair<int, int>>> v(3);
+    vector<pair<int, pair<int, int>>> link;
+    
+    for (int i = 0; i < N; i++) {
+        int x, y, z;
+        cin >> x >> y >> z;
+        v[0].push_back({ x,i });
+        v[1].push_back({ y,i });
+        v[2].push_back({ z,i });
+    }
+    sort(v[0].begin(), v[0].end());
+    sort(v[1].begin(), v[1].end());
+    sort(v[2].begin(), v[2].end());
+    
+    for (int i = 0; i < N; i++) {
+        parents[i] = i;
+    }
+
+    long long result = 0;
+    for (int i = 0; i < N-1; i++) {
+        link.push_back({ abs(v[0][i].first - v[0][i + 1].first),{v[0][i].second,v[0][i + 1].second} });
+        link.push_back({ abs(v[1][i].first - v[1][i + 1].first),{v[1][i].second,v[1][i + 1].second} });
+        link.push_back({ abs(v[2][i].first - v[2][i + 1].first),{v[2][i].second,v[2][i + 1].second} });
+    }
+    sort(link.begin(), link.end());
+
+    int cnt = 0;
+    for (int i = 0; i < link.size(); i++) {
+        if (union_p(link[i].second.first, link[i].second.second)) {
+            result += link[i].first;
+            if (++cnt == N - 1) break;
+        }
+    }
+    cout << result;
+}
+
