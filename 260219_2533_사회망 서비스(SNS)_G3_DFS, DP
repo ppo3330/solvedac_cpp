@@ -1,0 +1,51 @@
+//O(n)
+
+//dfs와 dp를 이용.
+//dfs로 타고 들어가며 해당 노드를 얼리어답터로 만들었을때와 아닐때의 수를 dp로 기록
+//dfs로 나오며 값들이 갱신되며 최종으로 시작한 노드 dp에 답이 나옴
+
+//처음에는 greedy와 priority queue를 이용하여 가장 degree가 많은 노드를 선택하는 방식을 해봄.
+//이는 정답이라고 할 근거가 없음. degree가 적은 부분을 먼저 선택해야 하는 경우의 수도 존재할 수 있음.
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+int result = 0;
+vector<vector<int>> link;
+vector<int> visited;
+int dp[1001][2];
+
+void dfs(int x) {
+    visited[x] = 1;
+    dp[x][0] = 0;
+    dp[x][1] = 1;
+    for (auto i : link[x]) {
+        if (visited[i] == 1) continue;
+        dfs(i);
+
+        dp[x][0] += dp[i][1];
+        dp[x][1] += min(dp[i][0], dp[i][1]);
+    }
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    link.resize(n + 1);
+    visited.assign(n + 1, 0);
+    for (int i = 1; i < n; i++) {
+        int a, b;
+        cin >> a >> b;
+        link[a].push_back(b);
+        link[b].push_back(a);
+    }
+
+    dfs(1);
+    cout << min(dp[1][0], dp[1][1]);
+    
+}
