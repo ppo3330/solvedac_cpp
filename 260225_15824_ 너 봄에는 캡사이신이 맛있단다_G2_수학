@@ -1,0 +1,63 @@
+//O(n log n)
+
+//m = x가 최소일 때 나오는 조합 * x
+//p = x가 최소일 때 나오는 조합 * x
+//p - m으로 최종합을 구함
+//조합 수를 위해서 two를 2의 제곱으로 해서 구했음
+//ex) 2 5 8
+/*
+2
+5
+8
+2 5
+2 8
+2 5 8
+
+(-2 -5 -8 -2 -2 -2)  +  (2 + 5 + 8 + 5 + 8 + 8) = 18
+*/
+
+//MOD연산에서 음수가 나올 수 있으므로 MOD를 한번 더해주고 %MOD해주면 음수 방지 가능
+
+
+//모든 조합을 구하거나 완전 탐색 하기에는 시간복잡도가 n^2이상이 되므로 안됨
+//MOD연산에서 음수가 나올 수 있음 인지
+//two가 int로 하게 될 시, 곱셈으로 long long으로 치환되는 과정에서 값이 바뀔 수 있기에 long long으로 선언해야함
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+#define MOD 1000000007
+using namespace std;
+
+int n;
+vector<int> food;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    
+    cin >> n;
+
+    vector<long long> two(n);
+    two[0] = 1;
+    for (int i = 1; i < n; i++) {
+        two[i] = (two[i - 1] * 2)%MOD;
+    }
+    
+    for (int i = 0; i < n; i++) {
+        int a;
+        cin >> a;
+        food.push_back(a);
+    }
+    sort(food.begin(), food.end());
+
+    long long m=0;
+    long long p=0;
+    for (int i = 0; i < n; i++) {
+        m += two[n - 1 - i] * food[i] % MOD;
+        p += two[i] * food[i] % MOD;
+    }
+    cout << (p % MOD + MOD - m % MOD) % MOD;
+}
