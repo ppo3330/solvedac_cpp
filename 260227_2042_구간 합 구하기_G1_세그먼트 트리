@@ -1,0 +1,67 @@
+//O(N + (M+K)log N)
+
+//segment tree를 구성 기본
+//트리의 크기는 N*4로 하면 됨.
+//재귀를 통해서 구현하며 st,ed,left,right은 수의 인덱스를 나타내고 node를 통해서만 접근을 함
+
+//지금까지 처럼 선형탐색으로 하면 시간초과 오류가 남
+//구조 기억하기
+
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int N, M, K;
+
+vector<long long> trees(4000000);
+vector<long long> nums(1000000);
+
+long long init(int st, int ed, int node) {
+    if (st == ed) {
+        return trees[node] = nums[st];
+    }
+    int mid = (st + ed) / 2;
+    return trees[node] = init(st, mid, node * 2) + init(mid + 1, ed, node * 2 + 1);
+}
+
+long long sum_(int st, int ed, int node, int left, int right) {
+    if (left > ed or right < st) return 0;
+    if (left <= st and right >= ed) return trees[node];
+    int mid = (st+ed) / 2;
+    return sum_(st, mid, node * 2, left, right) + sum_(mid + 1, ed, node * 2 + 1, left, right);
+}
+
+void update(int st,int ed, int node,int idx, long long dif) {
+    if (idx < st or idx> ed) return;
+
+    trees[node] += dif;
+    if (st == ed) return;
+    int mid = (st + ed) / 2;
+    update(st, mid, node * 2, idx, dif);
+    update(mid + 1, ed, node * 2 + 1, idx, dif);
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> N >> M >> K;
+    for (int i = 0; i <N; i++) {
+        cin >> nums[i];
+    }
+
+    init(0, N-1, 1);
+
+    for (int i = 0; i < M + K; i++) {
+        long long a, b, c;
+        cin >> a >> b >> c;
+        if (a == 1) {
+            update(0, N - 1, 1, b - 1, c - nums[b - 1]);
+            nums[b - 1] = c;
+        }
+        else cout << sum_(0, N - 1, 1, b-1, c-1)<<"\n";
+    }
+}
