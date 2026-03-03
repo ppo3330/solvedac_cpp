@@ -1,0 +1,59 @@
+//O(M log N)
+
+//segment tree인데 합으로 만든게 아니라 최소 최댓값을 기록하게 하면 됨.
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define NMAX 100001
+#define MAX 1e10
+
+int N,M;
+vector<long long> arr(NMAX);
+vector<pair<long long, long long>> segtree(NMAX * 4,{MAX,-1});
+
+pair<long long,long long> init(int st, int ed, int node) {
+    if (st >= ed) return segtree[node] = { arr[st], arr[st] };
+    int mid = (st + ed) / 2;
+
+    auto node1 = init(st, mid, node * 2);
+    auto node2 = init(mid + 1, ed, node * 2 + 1);
+
+    return segtree[node] = { min(node1.first,node2.first),max(node1.second,node2.second) };
+}
+
+pair<long long, long long> cal(int st, int ed, int node, int left, int right) {
+    if (left > ed or right < st) return { MAX,-1 };
+    if (left <= st and right >= ed) return segtree[node];
+    int mid = (st + ed) / 2;
+
+    auto node1 = cal(st, mid, node * 2, left, right);
+    auto node2 = cal(mid + 1, ed, node * 2 + 1, left, right);
+    return {min(node1.first,node2.first),max(node1.second,node2.second)};
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> N>>M;
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
+    }
+    init(0, N - 1, 1);
+    vector<pair<long long, long long>> results;
+
+    for (int i = 0; i < M; i++) {
+        int a, b;
+        cin >> a >> b;
+        results.push_back(cal(0, N - 1, 1, a - 1, b - 1));
+    }
+
+    for (auto result : results) {
+        cout << result.first << " " << result.second << "\n";
+    }
+
+}
