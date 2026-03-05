@@ -1,0 +1,43 @@
+//O(root(N))
+
+//result를 n으로 초기화
+//2부터 √n까지 순회하며 소인수 찾기
+//i가 소인수라면
+//- n에서 i를 모두 제거
+//  → result -= result / i
+//마지막에 n > 1이면 남은 n은 소수이므로 동일한 과정
+
+//모르던 이론
+//기억하기
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+
+long long N;
+
+long long euler_phi(long long n) {
+    long long result = n;
+    for (long long i = 2; i * i <= n; i++) {
+        cout << n << " " << i << " " << result << "\n";
+        if (n % i == 0) {
+            while (n % i == 0)
+                n /= i;
+            result -= result / i;
+        }
+    }
+    if (n > 1) result -= result / n;
+    return result;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> N;
+
+    cout << euler_phi(N);
+}
