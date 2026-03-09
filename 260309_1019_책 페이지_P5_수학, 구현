@@ -1,0 +1,58 @@
+//O(logN)
+
+//수학 구현
+//해당 자리의 수가 몇번이나 나오는지를 계산하는 방법 1의자리부터...
+//1~9는 한자리 수 더 많은 수 만큼 나오고, 1~r만큼 추가 되며, 0은 한자리수 많은 수보다 하나 덜 나온다.
+//이때 자리수를 넘어갈 수록 10씩 늘어나기에 w를 통해서 그만큼 곱해서 더함.
+
+//규칙을 찾고 알맞게 구현하는 방식인데, 솔직히 규칙 찾기도 어려워서 정답을 보고 풀었음.
+//비슷한 형태가 얼마나 나올지 모르지만 기억해보기
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int N;
+vector<long long> nums(10, 0);
+
+void calc(int w) {
+    if (N <= 0) return;
+
+    int q = N / 10 , r = N % 10;
+    for (int i = 1; i < 10; i++) {
+        nums[i] += q * w;
+    }
+
+    for (int i = 1; i <= r; i++) {
+        nums[i] += w;
+    }
+
+    nums[0] += q * w;
+
+    if (q) {
+        int tmp = q;
+        while (tmp) {
+            nums[tmp % 10] += (r + 1) * w;
+            tmp /= 10;
+        }
+    }
+    N = q - 1;
+    calc(w * 10);
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+
+    cin >> N;
+
+    calc(1);
+
+
+    for (int i = 0; i < 10; i++) {
+        cout << nums[i] << " ";
+    }
+}
