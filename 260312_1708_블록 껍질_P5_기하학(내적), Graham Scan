@@ -1,0 +1,81 @@
+#O(N log N(
+#정렬에서 N log N 나머지는 한 점을 최대 한번만 푸시하거나 팝 하므로 N
+
+#그람스캔
+#점들을 각도 순으로 한 바퀴 훑으면서 왼쪽으로만 꺾이는 점들만 남긴다
+#제일 아래, 왼쪽에 있는 값을 cordis[0]으로 두고, x축 기준 각도가 가장 작은 값들을 기준, 거리가 cordis[0]과 가까운 기준으로 정렬
+#res에 0번째,1번째를 넣고, 정렬한 순서로 돌면서 내적값이 양수면 해당값 res에 추가, 아니면 양수가 될때까지 res를 하나씩 빼온다.
+
+#거리기준을 안넣으면 문제가 됨.
+#내적값이 양수인것을 통해 도는것은 생각했는데, 정렬하는 기준을 세우지 못했었음.
+#compare함수의 경우 a < b를 기준으로 true를 반환한다고 생각하면 됨. -> dist(cordis[0], a) < dist(cordis[0], b) 는 a값이 더 작으면 true를 반환해서 a,b순으로 정렬되게 하겠다는 뜻.
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int N;
+struct pos {
+    long long x, y;
+};
+vector<pos> cordis;
+vector<pos> res;
+
+long long ccw(pos a, pos b, pos c) {
+    return a.x * b.y + b.x * c.y + c.x * a.y - (b.x * a.y + c.x * b.y + a.x * c.y);
+}
+
+long long dist(pos a, pos b) {
+    long long dx = a.x - b.x;
+    long long dy = a.y - b.y;
+    return dx * dx + dy * dy;
+}
+
+bool compare(pos a, pos b) {
+    long long cc = ccw(cordis[0], a, b);
+
+    if (cc)
+        return cc > 0;
+
+    return dist(cordis[0], a) < dist(cordis[0], b);
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+
+    cin >> N;
+
+    cordis.resize(N);
+    for (int i = 0; i < N; i++){
+        cin >> cordis[i].x >> cordis[i].y;
+    }
+
+    for (int i = 1; i < N; i++) {
+        if (cordis[i].y < cordis[0].y or ((cordis[i].y == cordis[0].y) and (cordis[i].x < cordis[0].x))) {
+            swap(cordis[i], cordis[0]);
+        }
+    }
+
+    sort(cordis.begin()+1, cordis.end(), compare);
+
+    res.push_back(cordis[0]);
+    res.push_back(cordis[1]);
+    for (int i = 2; i < N; i++) {
+        while (res.size() >= 2) {
+            pos top2 = res.back();
+            res.pop_back();
+            pos top1 = res.back();
+            if (ccw(top1, top2, cordis[i]) > 0) {
+                res.push_back(top2);
+                break;
+            }
+        }
+        res.push_back(cordis[i]);
+    }
+
+    cout << res.size();
+}
