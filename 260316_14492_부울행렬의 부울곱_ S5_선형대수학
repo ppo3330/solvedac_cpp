@@ -1,0 +1,48 @@
+#O(N^3)
+
+#난이도 밑에 문제도 풀면서 기본실력을 향상시켜보자.
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int N;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+
+    cin >> N;
+    vector<vector<int>> A(N, vector<int>(N));
+    vector<vector<int>> B(N, vector<int>(N));
+    vector<vector<int>> C(N, vector<int>(N,0));
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> A[i][j];
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> B[i][j];
+        }
+    }
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            for (int k = 0; k < N; k++) {
+                C[i][j] = C[i][j] | (A[i][k] & B[k][j]);
+            }
+        }
+    }
+    int res = 0;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (C[i][j] == 1)
+                res++;
+        }
+    }
+    cout << res;
+}
