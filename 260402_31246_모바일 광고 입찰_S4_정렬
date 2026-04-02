@@ -1,0 +1,46 @@
+#O(n)
+
+#이미 A가 더 크면 ans++ B가 크면 차이를 저장해둠
+#차이를 기준으로 X값을 높이면서 ans가 m보다 같거나 클때까지 X값을 높임
+
+#ans값에 대해서 풀다보니 헷갈려서 틀렸었음
+#15분
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int n, m;
+	cin >> n >> m;
+	vector<int> v;
+
+	int ans = 0;
+	for (int i = 0; i < n; i++) {
+		int A, B;
+		cin >> A >> B;
+		if (A >= B) ans++;
+		else v.push_back(B-A);
+	}
+	sort(v.begin(), v.end());
+
+	int X = 0;
+	int idx = 0;
+	while (ans < m and idx < v.size()) {
+		if (v[idx] > X) {
+			X = v[idx];
+			ans++;
+			idx++;
+		}
+		else if (X == v[idx]) {
+			idx++;
+			ans++;
+		}
+	}
+	cout << X;
+}
